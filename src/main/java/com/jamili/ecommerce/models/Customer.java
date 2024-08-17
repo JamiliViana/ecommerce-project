@@ -19,14 +19,16 @@ public class Customer {
     private String email;
     private String mobile;
     private String address;
+    private String password;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
-    public Customer(String costumerName, String email, String mobile, String address) {
+    public Customer(String costumerName, String email, String mobile, String address, String password) {
         this.costumerName = costumerName;
         this.email = email;
         this.mobile = mobile;
         this.address = address;
+        this.password = password;
     }
 }
