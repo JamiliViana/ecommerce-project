@@ -1,10 +1,6 @@
-package com.jamili.ecommerce.model;
+package com.jamili.ecommerce.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +19,9 @@ public class Customer {
     private String email;
     private String mobile;
     private String address;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 
     public Customer(String costumerName, String email, String mobile, String address) {
         this.costumerName = costumerName;

@@ -1,6 +1,6 @@
 package com.jamili.ecommerce.controller;
 
-import com.jamili.ecommerce.model.Customer;
+import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

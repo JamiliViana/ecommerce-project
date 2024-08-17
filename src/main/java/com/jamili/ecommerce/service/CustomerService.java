@@ -1,6 +1,6 @@
 package com.jamili.ecommerce.service;
 
-import com.jamili.ecommerce.model.Customer;
+import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
