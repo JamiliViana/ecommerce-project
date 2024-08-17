@@ -1,5 +1,6 @@
 package com.jamili.ecommerce.config;
 
+import com.jamili.ecommerce.config.exceptions.CustomerAlreadyExistsException;
 import com.jamili.ecommerce.config.exceptions.CustumerNotFoundException;
 import com.jamili.ecommerce.config.exceptions.ErrorMessage;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustumerNotFoundException.class)
         public ResponseEntity<Object> handleCustomerNotFoundException(
                 CustumerNotFoundException exception, WebRequest request) {
-
             ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+            return new ResponseEntity<>(errorMessage, new HttpHeaders(), errorMessage.getStatus());
+        }
 
+    @ExceptionHandler(CustomerAlreadyExistsException.class)
+        public ResponseEntity<Object> handleCustomerAlreadyExistsException(
+            CustomerAlreadyExistsException exception, WebRequest request) {
+            ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
             return new ResponseEntity<>(errorMessage, new HttpHeaders(), errorMessage.getStatus());
         }
 }

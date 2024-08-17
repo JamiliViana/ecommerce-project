@@ -1,12 +1,11 @@
 package com.jamili.ecommerce.service;
 
+import com.jamili.ecommerce.config.exceptions.CustomerAlreadyExistsException;
 import com.jamili.ecommerce.config.exceptions.CustumerNotFoundException;
 import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -14,8 +13,17 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Customer createCustomer(Customer customer){
-        return this.customerRepository.save(customer);
+    public Customer createCustomer(Customer newCustomer){
+        Iterable<Customer> customers = getAllCustomers();
+        for (Customer customer : customers) {
+            if (customer.getEmail().equals(newCustomer.getEmail())) {
+                throw new CustomerAlreadyExistsException(newCustomer.getEmail());
+            }
+            if (customer.getCpf().equals(newCustomer.getCpf())) {
+                throw new CustomerAlreadyExistsException(newCustomer.getCpf());
+            }
+        }
+        return customerRepository.save(newCustomer);
     }
 
     public Customer findCustomerById (int customerId){
@@ -36,6 +44,10 @@ public class CustomerService {
     public void deleteCustomer(int cusotmerId){
         Customer customerToDelete = this.findCustomerById(cusotmerId);
         this.customerRepository.delete(customerToDelete);
+    }
+
+    public Iterable<Customer> getAllCustomers(){
+        return customerRepository.findAll();
     }
 
     public Customer findCustomerByEmail(String email) {
