@@ -1,5 +1,6 @@
 package com.jamili.ecommerce.service;
 
+import com.jamili.ecommerce.config.exceptions.CustumerNotFoundException;
 import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,9 @@ public class CustomerService {
     }
 
     public Customer findCustomerById (int customerId){
-        Optional<Customer> recebeCustomer = this.customerRepository.findById(customerId);
-        return recebeCustomer.orElseThrow();
+        Customer customerResult = this.customerRepository.findById(customerId);
+        if (customerResult == null) {throw new CustumerNotFoundException(customerId);}
+        return customerResult;
     }
 
     public Customer updateCustomer(int customerId, Customer customerUpdated){
@@ -36,10 +38,11 @@ public class CustomerService {
         this.customerRepository.delete(customerToDelete);
     }
 
-    public Iterable<Customer> getAllCustomers(){
-        return this.customerRepository.findAll();
+    public Customer findCustomerByEmail(String email) {
+        Customer customerResult = customerRepository.findByEmail(email);
+        if (customerResult == null) {throw new CustumerNotFoundException(email);}
+        return customerResult;
     }
-
 
 
 }

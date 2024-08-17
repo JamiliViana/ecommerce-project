@@ -3,6 +3,7 @@ package com.jamili.ecommerce.controller;
 import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,31 +15,26 @@ public class CustumerController {
     private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer){
-        Customer createdCustomer = customerService.createCustomer(customer);
-        return ResponseEntity.ok(createdCustomer);
-    }
-
-    @GetMapping(value = "/{idCustomer}")
-    public ResponseEntity<Customer> findCustomerById(@PathVariable int idCustomer){
-        Customer findCustomerById = customerService.findCustomerById(idCustomer);
-        return  ResponseEntity.ok(findCustomerById);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer registerCustomer(@RequestBody Customer customer){
+        return customerService.createCustomer(customer);
     }
 
     @PutMapping(value = "/{idCustomer}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable int idCustomer, @RequestBody Customer customer){
-        Customer editedCustomer = customerService.updateCustomer(idCustomer, customer);
-        return ResponseEntity.ok(editedCustomer);
+    @ResponseStatus(HttpStatus.OK)
+    public Customer editCustomer(@PathVariable int idCustomer, @RequestBody Customer customer){
+        return customerService.updateCustomer(idCustomer, customer);
     }
 
     @DeleteMapping(value = "/{idCustomer}")
-    public ResponseEntity deleteCustomer(@PathVariable int idCustomer){
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCustomer(@PathVariable int idCustomer){
         customerService.deleteCustomer(idCustomer);
-        return ResponseEntity.status(200).build();
     }
 
-    @GetMapping
-    public Iterable<Customer> getAllCustomers(){
-        return customerService.getAllCustomers();
+    @GetMapping(value = "/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public Customer findCustomerByEmail(@PathVariable String email){
+        return customerService.findCustomerByEmail(email);
     }
 }
