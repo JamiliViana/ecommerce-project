@@ -1,10 +1,11 @@
 package com.jamili.ecommerce.controller;
 
+import com.jamili.ecommerce.dto.CustomerDTO;
 import com.jamili.ecommerce.models.Customer;
 import com.jamili.ecommerce.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,14 +17,14 @@ public class CustumerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Customer registerCustomer(@RequestBody Customer customer){
-        return customerService.createCustomer(customer);
+    public Customer registerCustomer(@Valid @RequestBody CustomerDTO customer){
+        return customerService.createCustomer(customer.transformToCustomer(customer));
     }
 
     @PutMapping(value = "/{idCustomer}")
     @ResponseStatus(HttpStatus.OK)
-    public Customer editCustomer(@PathVariable int idCustomer, @RequestBody Customer customer){
-        return customerService.updateCustomer(idCustomer, customer);
+    public Customer editCustomer(@PathVariable int idCustomer, @Valid  @RequestBody CustomerDTO customer){
+        return customerService.updateCustomer(idCustomer,customer.transformToCustomer(customer));
     }
 
     @DeleteMapping(value = "/{idCustomer}")
