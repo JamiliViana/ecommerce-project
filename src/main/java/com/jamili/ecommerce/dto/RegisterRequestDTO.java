@@ -26,4 +26,3 @@ public record RegisterRequestDTO (
         @NotBlank(message = "Cpf é obrigatório")
         @Size(min = 11, max = 11, message = "Cpf deve ter exatamente 11 dígitos")
         String cpf) {}
-

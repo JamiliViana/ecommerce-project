@@ -7,7 +7,10 @@ import com.jamili.ecommerce.dto.ResponseDTO;
 import com.jamili.ecommerce.models.User;
 import com.jamili.ecommerce.repository.UserRepository;
 import com.jamili.ecommerce.security.TokenService;
+import com.jamili.ecommerce.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,36 +24,26 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        User user = this.userRepository.findByEmail(body.email()).orElseThrow(() -> new UserNotFoundException(body.email()));
-        if(passwordEncoder.matches(body.password(), user.getPassword())) {
-            String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getUsername(), token));
-        }
-        return ResponseEntity.badRequest().build();
+        ResponseDTO response = userService.login(body);
+
+        if (response == null) {return ResponseEntity.badRequest().build();}
+
+        return ResponseEntity.ok(response);
     }
 
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<User> user = this.userRepository.findByEmail(body.email());
+    public ResponseEntity register(@Valid @RequestBody RegisterRequestDTO body){
+        ResponseDTO responseDTO = userService.register(body);
 
-        if(user.isEmpty()) {
-            User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setUsername(body.name());
-            newUser.setRole("ROLE_USER");
-            this.userRepository.save(newUser);
+        if (responseDTO == null) {return ResponseEntity.badRequest().build();}
 
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), token));
-        }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(responseDTO);
     }
 }

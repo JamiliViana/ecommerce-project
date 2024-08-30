@@ -1,5 +1,6 @@
 package com.jamili.ecommerce.config;
 
+import com.jamili.ecommerce.config.exceptions.InvalidCredentialsException;
 import com.jamili.ecommerce.config.exceptions.UserAlreadyExistsException;
 import com.jamili.ecommerce.config.exceptions.UserNotFoundException;
 import com.jamili.ecommerce.config.exceptions.ErrorMessage;
@@ -45,5 +46,11 @@ public class CustomExceptionHandler {
         Map<String, List<String>> errorResponse = new HashMap<>();
         errorResponse.put("errors", errors);
         return errorResponse;
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Object> handleInvalidCredentials(InvalidCredentialsException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), errorMessage.getStatus());
     }
 }
