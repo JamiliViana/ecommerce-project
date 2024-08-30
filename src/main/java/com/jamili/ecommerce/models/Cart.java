@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "tb_cart")
 @Getter
@@ -14,16 +12,13 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cartId;
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderItem> items;
+    private int id;
 
     @Transient
     private double totalCartValue;
 
     @OneToOne
-    @JoinColumn(name = "custumer_customerid", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }

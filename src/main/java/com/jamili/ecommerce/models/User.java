@@ -7,29 +7,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tb_customer")
+@Table(name = "tb_user")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Customer {
+public class User {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int costumerId;
+    private int id;
 
-
-    private String costumerName;
+    private String username;
     private String email;
     private String mobile;
     private String address;
     private String password;
     private String cpf;
+    private String role;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Cart cart;
 
-    public Customer(String costumerName, String email, String mobile, String address, String password, String cpf) {
-        this.costumerName = costumerName;
+    public User(String username, String email, String mobile, String address, String password, String cpf) {
+        this.username = username;
         this.email = email;
         this.mobile = mobile;
         this.address = address;
